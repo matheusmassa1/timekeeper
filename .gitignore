@@ -1,0 +1,17 @@
+/target
+/classes
+/checkouts
+/pgdata
+profiles.clj
+pom.xml
+pom.xml.asc
+*.jar
+*.class
+/.lein-*
+/.nrepl-port
+/.prepl-port
+.hgignore
+.hg/
+.rebl/
+.env
+set_timekeeper_vars.sh

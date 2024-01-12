@@ -1,0 +1,10 @@
+{:db {:dbtype "postgresql"
+      :dbname "timekeeper"
+      :host "localhost"
+      :user #env POSTGRES_USER
+      :password #env POSTGRES_PASSWORD}
+ :oauth {:client_id #env OAUTH_CLIENT_ID
+         :client_secret #env OAUTH_CLIENT_SECRET
+         :redirect_uri "http://localhost:3001/oauth-callback"
+         :redirect_uris ["http://localhost:3001/oauth-callback"]
+         :scopes ["https://www.googleapis.com/auth/calendar"]}}
