@@ -1,4 +1,4 @@
-(ns timekeeper.core
+(ns timekeeper.app
   (:require [timekeeper.api.routes :refer [app-routes]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :as rmp]

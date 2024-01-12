@@ -3,7 +3,8 @@
             [happy.oauth2 :as oauth]
             [timekeeper.config :as config]
             [timekeeper.gapi-auth :as auth]
-            [happygapi.calendar.calendarList :as calendar]))
+            [happygapi.calendar.calendarList :as calendar]
+            [happygapi.calendar.events :as event]))
    
 
 
@@ -28,9 +29,12 @@
     resp/response {:status 200
                    :body body})
   ,,,)
-  
+ 
+(defn list-events-handler [calendar-id]
+  (let [body (event/list$ (auth/auth!) {:calendarId calendar-id})]
+    resp/response {:status 200
+                   :body body}))
+    
 
 (comment 
-  (clojure.pprint/pprint @auth/gapi-access-token)
-  (auth/auth! @auth/gapi-access-token)
   ,,,)
