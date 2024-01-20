@@ -14,4 +14,6 @@
                  [ring/ring-jetty-adapter "1.11.0"]
                  [ring/ring-devel "1.11.0"]
                  [cheshire "5.10.0"]
-                 [compojure "1.7.0"]])
+                 [compojure "1.7.0"]
+                 [buddy/buddy-auth "3.0.323"]
+                 [buddy/buddy-hashers "2.0.167"]])

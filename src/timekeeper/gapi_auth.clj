@@ -20,6 +20,4 @@
  
 
 (comment
-  (require '[happygapi.calendar.calendarList :as cal])
-  (cal/list$ (auth!) {})
-  ,)
+  ,,,)

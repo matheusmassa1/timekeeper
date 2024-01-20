@@ -16,10 +16,5 @@
 (defn gapi-scopes []
   (get-in (oauth-config) [:scopes]))
 
-
-(comment
- (load-config)
- (get-gapi-scopes)
- (get-config :db)
- (with-oauth-config)
- ,) 
+(defn jwt-secret []
+  (get-config :jwt-secret))

@@ -7,4 +7,5 @@
          :client_secret #env OAUTH_CLIENT_SECRET
          :redirect_uri "http://localhost:3001/oauth-callback"
          :redirect_uris ["http://localhost:3001/oauth-callback"]
-         :scopes ["https://www.googleapis.com/auth/calendar"]}}
+         :scopes ["https://www.googleapis.com/auth/calendar"]}
+ :jwt-secret "JWT_SCRET"}
