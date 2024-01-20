@@ -6,6 +6,7 @@ services:
     restart: always
     environment:
       POSTGRES_PASSWORD: "swordfish"
+      POSTGRES_DB: "timekeeper"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:
