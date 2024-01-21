@@ -7,11 +7,6 @@
             [cheshire.core :as json]
             [timekeeper.config :refer [oauth-config gapi-scopes]]))
 
-(def gapi-access-token (atom {}))
-
-(defn set-access-token! [token]
-  (reset! gapi-access-token token))
-
 (defn auth! []
   (let [credentials @gapi-access-token
         new-credentials (ocr/update-credentials (oauth-config) @gapi-access-token (gapi-scopes) nil)]

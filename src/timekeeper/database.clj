@@ -43,15 +43,16 @@
       sanitized-user
       nil))) 
      
-   
-(defn save-oauth-credentials
-  [{:keys [user-id access-token scope expires-in expires-at]}]
+
+(defn save-oauth-credentials 
+  [{:keys [user-id access-token expires-in scope expires-at]}]
   (let [saved-token (->
-                      ()
-                      (hh/insert-into :oauth-credentials)
-                      (hh/columns :user-id :access-token :scope :expires-in :expires-at) 
-                      (hh/values [[user-id access-token scope expires-in expires-at]])
-                      sql/format
-                      db-query-one)]
+                        (hh/insert-into :oauth-credentials)
+                        (hh/columns :user-id :access-token :expires-in :scope :expires-at)
+                        (hh/values [[user-id access-token expires-in scope expires-at]])
+                        sql/format
+                        db-query-one)]
     saved-token))
 
+(comment
+  ,,,)

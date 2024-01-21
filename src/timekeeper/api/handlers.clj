@@ -6,9 +6,8 @@
             [timekeeper.database :as db]
             [timekeeper.api.auth :as api-auth]
             [happygapi.calendar.calendarList :as calendar]
-            [happygapi.calendar.events :as event]))
-   
-
+            [happygapi.calendar.events :as event]
+            [timekeeper.utils :as utils]))
 
 (defn ping []
   (resp/response {:status 200
@@ -35,16 +34,19 @@
           (assoc :session (assoc {} :identity user))))))
 
 (defn get-oauth-access-token-handler [request]
-  (let [code (:code (:params request))]
-    (->> code
-         (oauth/exchange-code (config/oauth-config))
-         (auth/set-access-token!))
+  (let [code (:code (:params request))
+        user-id (get-in (:identity (:session request)) [:id])
+        token-data (oauth/exchange-code (config/oauth-config) code)
+        saved-token (-> token-data
+                         (dissoc :token_type)
+                         (assoc :user-id user-id)
+                         (utils/map-keys-to-hyphen)
+                         (db/save-oauth-credentials))]
     (resp/response {:status 200
-                    :body "OK"})))
+                    :message "OK"})))
 
 (defn get-oauth-code-handler []
-  (let [uri (oauth/set-authorization-parameters)] 
-       (config/oauth-config) (config/gapi-scopes)
+  (let [uri (oauth/set-authorization-parameters (config/oauth-config) (config/gapi-scopes))]
     (resp/redirect uri)))
 
 (defn list-calendars-handler []
