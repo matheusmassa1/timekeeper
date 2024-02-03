@@ -13,5 +13,8 @@ pom.xml.asc
 .hgignore
 .hg/
 .rebl/
+.clj-kondo/
+.lsp/
+.calva/
 .env
 set_timekeeper_vars.sh
