@@ -3,6 +3,8 @@
       :host "localhost"
       :user #env POSTGRES_USER
       :password #env POSTGRES_PASSWORD}
+ :memcached {:host "localhost"
+             :port 11211}
  :oauth {:client_id #env OAUTH_CLIENT_ID
          :client_secret #env OAUTH_CLIENT_SECRET
          :redirect_uri "http://localhost:3001/oauth-callback"

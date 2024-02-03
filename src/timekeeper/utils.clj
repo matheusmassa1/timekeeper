@@ -21,3 +21,6 @@
 
 (defn map-keys-to-underscore [m]
   (convert-keys m hyphen-to-underscore))
+
+(defn reset-metadata [data]
+  (with-meta data nil))

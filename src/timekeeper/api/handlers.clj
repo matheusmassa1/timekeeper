@@ -19,18 +19,16 @@
         session (assoc {} :identity user)]
     (-> (resp/response (created {:user user
                                  :token (api-auth/create-token user)}))
-        (assoc :session session))))
+          (assoc :session session))))
 
 (defn login [request]
   (let [data (:body request)
-        user (db/get-user data)
-        identity-info (dissoc user :email)]
-    (println user)
+        user (db/get-user data)]
     (if (nil? user)
       (resp/response (bad-request {:error "Invalid credentials"}))
       (-> (resp/response (ok {:user user
-                              :token (api-auth/create-token identity-info)}))
-          (assoc :session (assoc {} :identity identity-info))))))
+                              :token (api-auth/create-token user)}))
+          (assoc :session (assoc {} :identity user))))))
 
 (defn get-oauth-access-token-handler [request]
   (let [code (:code (:params request))
@@ -66,17 +64,4 @@
 ;     resp/response {:status 200
 ;                    :body body}))
 
-(comment
-  (require '[taoensso.carmine :as car])
-  (def my-conn-spec {:pool {}
-                     :spec {:host "localhost"
-                            :port 6379}})
-  (def redis-conn {:pool {}
-                   :spec (config/redis-config)})
-  (def conn (car/connection-pool my-conn-spec))
-
-  (car/wcar redis-conn (car/ping))
-  (println redis-conn)
-  (db/get-user {:username "matheus" :password "12345"})
-
-  ,,,)
+(comment ,,,)

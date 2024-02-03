@@ -10,6 +10,10 @@
 (defn db-config []
   (get-config :db))
 
+(defn memcached-config []
+  (let [config (get-config :memcached)]
+    (str (config :host) ":" (config :port))))
+
 (defn oauth-config []
   (get-config :oauth))
 
@@ -20,5 +24,4 @@
   (get-config :jwt-secret))
 
 (comment 
-  (load-config)
   ,,,)

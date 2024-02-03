@@ -5,7 +5,8 @@
             [next.jdbc :as jdbc]
             [next.jdbc.date-time]
             [next.jdbc.result-set :as rs]
-            [buddy.hashers :refer [encrypt check]]))
+            [buddy.hashers :refer [encrypt check]]
+            [timekeeper.utils :as utils]))
 
 (def db (jdbc/get-datasource (config/db-config)))
 
@@ -15,7 +16,6 @@
                   :builder-fn rs/as-unqualified-maps}))
 
 (defn db-query-one [sql]
-  (print sql)
   (jdbc/execute-one! db sql
                  {:return-keys true
                   :builder-fn rs/as-unqualified-maps}))
@@ -28,7 +28,8 @@
                        (hh/columns :email :username :password)
                        (hh/values [[email username hashed-password]])
                        sql/format
-                       db-query-one)
+                       db-query-one
+                      (utils/reset-metadata))
         sanitized-user (dissoc created-user :password)]
     sanitized-user))
    
@@ -37,7 +38,8 @@
                   (hh/from :users)
                   (hh/where := :username username)
                   sql/format
-                  db-query-one)
+                  db-query-one
+                  (utils/reset-metadata))
          sanitized-user (dissoc user :password)]
     (if (and user (check password (:password user)))
       sanitized-user
@@ -65,5 +67,4 @@
 
 
 (comment 
-  (get-user {:username "matheus" :password "12345"})
   ,,,)
