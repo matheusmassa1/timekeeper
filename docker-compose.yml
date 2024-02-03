@@ -11,6 +11,10 @@ services:
       - ./pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+  memcached:
+    image: "memcached:latest"
+    ports:
+      - "11211:11211"
 
 volumes:
   pgdata:
