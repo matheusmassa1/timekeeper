@@ -16,5 +16,6 @@ pom.xml.asc
 .clj-kondo/
 .lsp/
 .calva/
+.vscode/
 .env
 set_timekeeper_vars.sh
