@@ -1,6 +1,5 @@
 (ns timekeeper.database
   (:require [timekeeper.config :as config]
-            [timekeeper.utils :refer [map-keys-to-underscore map-keys-to-hyphen]]
             [honey.sql :as sql]
             [honey.sql.helpers :as hh]
             [next.jdbc :as jdbc]
@@ -16,6 +15,7 @@
                   :builder-fn rs/as-unqualified-maps}))
 
 (defn db-query-one [sql]
+  (print sql)
   (jdbc/execute-one! db sql
                  {:return-keys true
                   :builder-fn rs/as-unqualified-maps}))
@@ -54,5 +54,16 @@
                         db-query-one)]
     saved-token))
 
-(comment
+(defn get-last-oauth-token-by-user-id [user-id]
+  (let [data (-> (hh/select :*)
+              (hh/from :oauth-credentials)
+              (hh/where := :user-id user-id)
+              (hh/order-by [:created-at :desc])
+              (sql/format)
+              (db-query-one))]
+    data))
+
+
+(comment 
+  (get-user {:username "matheus" :password "12345"})
   ,,,)

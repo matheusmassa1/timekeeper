@@ -18,3 +18,7 @@
 
 (defn jwt-secret []
   (get-config :jwt-secret))
+
+(comment 
+  (load-config)
+  ,,,)
