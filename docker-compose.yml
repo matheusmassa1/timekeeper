@@ -1,20 +1,23 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: "swordfish"
-      POSTGRES_DB: "timekeeper"
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
   memcached:
     image: "memcached:latest"
     ports:
       - "11211:11211"
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: timekeeper
+    volumes:
+      - ./mongodata:/data/db
 
 volumes:
-  pgdata:
+  mongodata:
+    driver: local

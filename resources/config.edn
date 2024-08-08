@@ -1,8 +1,8 @@
-{:db {:dbtype "postgresql"
-      :dbname "timekeeper"
+{:db {:dbname "timekeeper"
       :host "localhost"
-      :user #env POSTGRES_USER
-      :password #env POSTGRES_PASSWORD}
+      :user "user"
+      :password "12345"
+      :port 27017}
  :memcached {:host "localhost"
              :port 11211}
  :oauth {:client_id #env OAUTH_CLIENT_ID

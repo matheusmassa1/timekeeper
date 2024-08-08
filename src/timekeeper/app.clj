@@ -17,6 +17,6 @@
       (rms/wrap-session {:store (mem-store (memcached-config))})))
 
 (comment
-  (def server (run-jetty (#'create-app #'app-routes) {:join? false :port 3000})) ;; pass app-routes as function not value https://clojure.org/guides/weird_characters#_var_quote
+  (def server (run-jetty (#'create-app #'app-routes) {:join? false :port 3001}))
   (.stop server)
   ,,,)
