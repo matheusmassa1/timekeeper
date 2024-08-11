@@ -3,7 +3,8 @@
             [timekeeper.utils :as utils]
             [monger.core :as mg]
             [monger.collection :as mc]
-            [buddy.hashers :refer [encrypt check]]))
+            [buddy.hashers :refer [encrypt check]])
+  (:import org.bson.types.ObjectId))
 
 (defn create-mongo-uri
   [{:keys [dbname host user password port]}]
@@ -19,16 +20,11 @@
         {:keys [conn db]} (mg/connect-via-uri uri)]
   {:conn conn :db db}))
 
-(defn insert-document [db]
-  (let [coll "events"
-        document {:name "John Dxe" :age 30 :city "New York"}]
-    (mc/insert db coll document)))
-
-(let [{:keys [conn db]} (connect-to-mongo)]
-  (insert-document db)
-  (mg/disconnect conn))
-
-;; (def db (jdbc/get-datasource (config/db-config)))
+(defn insert-document [document coll]
+  (let [{:keys [db]} (connect-to-mongo)
+        oid (ObjectId.)
+        doc (merge document {:_id oid})]
+    (mc/insert-and-return db coll doc)))
 
 ;; (defn db-query [sql]
 ;;   (jdbc/execute! db sql
