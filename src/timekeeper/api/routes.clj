@@ -1,6 +1,6 @@
 (ns timekeeper.api.routes
   (:require [timekeeper.api.handlers :as handlers]
-            [timekeeper.api.auth :refer [login authenticated-access]]
+            [timekeeper.api.auth :refer [login auth-access-rules]]
             [buddy.auth.accessrules :refer [restrict success error]]
             [ring.util.response :as resp]
             [ring.handler.dump :refer [handle-dump]]
@@ -8,7 +8,7 @@
             [compojure.route :as route]))
 
 (defroutes app-routes
-  (GET "/healthCheck" [] (restrict handlers/ping {:handler authenticated-access}))
+  (GET "/healthCheck" [] (restrict handlers/ping {:handler auth-access-rules}))
   ;; (POST "/register" params (handlers/register params))
   (POST "/login" params (login params))
   (GET "/requestInfo" [] handle-dump)

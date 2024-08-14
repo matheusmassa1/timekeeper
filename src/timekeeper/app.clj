@@ -12,13 +12,11 @@
 
 (defn create-app [app-routes]
   (-> app-routes
-      (wrap-authorization auth-backend)
-      (wrap-authentication auth-backend)
-      (rmkp/wrap-keyword-params)
-      (rmp/wrap-params)
-      (rmj/wrap-json-body {:keywords? true})
+      (wrap-jwt-authentication)
+      ;; (rmkp/wrap-keyword-params)
+      ;; (rmp/wrap-params)
       (rmj/wrap-json-response)
-      (rms/wrap-session {:store (mem-store (memcached-config))})))
+      (rmj/wrap-json-body {:keywords? true})))
 
 (comment
   (def server (run-jetty (#'create-app #'app-routes) {:join? false :port 3001}))

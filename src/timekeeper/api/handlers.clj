@@ -1,5 +1,6 @@
 (ns timekeeper.api.handlers
   (:require [ring.util.response :as resp]
+            [buddy.auth :refer [authenticated?]]
             [happy.oauth2 :as oauth]
             [timekeeper.config :as config]
             [timekeeper.database :as db]
@@ -9,9 +10,12 @@
             [timekeeper.utils :as utils]
             [timekeeper.api.utils :refer [ok bad-request created]]))
 
-(defn ping []
-  (resp/response {:status 200
-                  :message "It's fine"}))
+(defn ping [request]
+  (if (authenticated? request)
+    (resp/response {:status 200
+                    :body "pong"})
+    (resp/response {:status 401
+                    :body "Unauthorized"})))
 
 ;; (defn register [request]
 ;;   (let [data (:body request)

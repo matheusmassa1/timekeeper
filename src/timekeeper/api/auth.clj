@@ -10,13 +10,12 @@
    [java-time.api :as jt]))
 
 
-(def secret "mysecret")
+(defonce secret "mysecret")
 
 (def auth-data {:username "admin" :password "admin"})
 
 (def auth-backend
-  (jws-backend {:secret secret
-                :options {:options :hs512}}))
+  (jws-backend {:secret secret}))
 
 (defn register []
   true)
@@ -41,23 +40,13 @@
         (ok {:token token}))
       (bad-request {:error "Invalid credentials"}))))
 
-(defn authorization-handler [handler]
-  (fn [request]
-    (let [_ (println "Authorization: " (:identity request))]
-      (handler request))))
-
-(defn authentication-handler [handler]
-  (fn [request]
-    (let [_ (println "Authentication: " :identity (:identity request))]
-      (handler request))))
-
 (defn wrap-jwt-authentication [handler]
   (wrap-authentication handler auth-backend))
 
-(defn authenticated-access [request]
+(defn auth-access-rules [request]
   (if (authenticated? request)
     (success)
-    (error)))
+    (error {:status 401 :body {:error "Unauthorized"}})))
 
 
 ;; (defn backend []
