@@ -1,6 +1,7 @@
 (ns timekeeper.database
   (:require [timekeeper.config :as config]
             [timekeeper.utils :as utils]
+            [buddy.hashers :refer [encrypt]]
             [monger.core :as mg]
             [monger.collection :as mc])
   (:import org.bson.types.ObjectId))
@@ -25,6 +26,15 @@
         doc (merge document {:_id oid})]
     (mc/insert-and-return db coll doc)))
 
+(defn create-user [document]
+  (let [{:keys [username email password]} document
+        hashed-password (encrypt password)
+        created-user (insert-document {:username username
+                                       :email email
+                                       :password hashed-password}
+                                      "users")
+        sanitized (dissoc created-user :password)]
+    sanitized))
 ;; (defn db-query [sql]
 ;;   (jdbc/execute! db sql
 ;;                  {:return-keys true

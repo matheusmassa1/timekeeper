@@ -17,4 +17,5 @@
                  [compojure "1.7.0"]
                  [buddy/buddy-sign "3.5.351"]
                  [buddy/buddy-core "1.12.0-430"]
+                 [buddy/buddy-hashers "2.0.167"]
                  [buddy/buddy-auth "3.0.1"]])

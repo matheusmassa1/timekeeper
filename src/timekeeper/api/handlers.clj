@@ -11,11 +11,8 @@
             [timekeeper.api.utils :refer [ok bad-request created]]))
 
 (defn ping [request]
-  (if (authenticated? request)
-    (resp/response {:status 200
-                    :body "pong"})
-    (resp/response {:status 401
-                    :body "Unauthorized"})))
+  (resp/response {:status 200
+                  :body "pong"}))
 
 ;; (defn register [request]
 ;;   (let [data (:body request)
