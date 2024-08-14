@@ -8,7 +8,7 @@
             [compojure.route :as route]))
 
 (defroutes app-routes
-  (GET "/healthCheck" [] (restrict handlers/ping {:handler auth-access-rules}))
+  (GET "/healthCheck" req (handlers/ping req))
   ;; (POST "/register" params (handlers/register params))
   (POST "/login" params (login params))
   (GET "/requestInfo" [] handle-dump)
