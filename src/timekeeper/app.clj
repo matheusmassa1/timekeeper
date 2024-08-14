@@ -1,6 +1,8 @@
 (ns timekeeper.app
   (:require [timekeeper.api.routes :refer [app-routes]]
             [timekeeper.config :refer [memcached-config]]
+            [timekeeper.api.auth :refer [auth-backend wrap-jwt-authentication]]
+            [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.middleware.params :as rmp]
             [ring.middleware.keyword-params :as rmkp]
@@ -10,6 +12,8 @@
 
 (defn create-app [app-routes]
   (-> app-routes
+      (wrap-authorization auth-backend)
+      (wrap-authentication auth-backend)
       (rmkp/wrap-keyword-params)
       (rmp/wrap-params)
       (rmj/wrap-json-body {:keywords? true})

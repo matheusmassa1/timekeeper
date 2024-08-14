@@ -2,8 +2,7 @@
   (:require [timekeeper.config :as config]
             [timekeeper.utils :as utils]
             [monger.core :as mg]
-            [monger.collection :as mc]
-            [buddy.hashers :refer [encrypt check]])
+            [monger.collection :as mc])
   (:import org.bson.types.ObjectId))
 
 (defn create-mongo-uri
