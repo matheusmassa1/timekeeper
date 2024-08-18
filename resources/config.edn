@@ -1,0 +1,13 @@
+{:db {:dbname "timekeeper"
+      :host "localhost"
+      :user "user"
+      :password "12345"
+      :port 27017}
+ :memcached {:host "localhost"
+             :port 11211}
+ :oauth {:client_id #env OAUTH_CLIENT_ID
+         :client_secret #env OAUTH_CLIENT_SECRET
+         :redirect_uri "http://localhost:3001/oauth-callback"
+         :redirect_uris ["http://localhost:3001/oauth-callback"]
+         :scopes ["https://www.googleapis.com/auth/calendar"]}
+ :jwt-secret "JWT_SCRET"}
