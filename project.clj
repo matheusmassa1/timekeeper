@@ -12,10 +12,14 @@
                  [ring/ring-devel "1.12.2"]
                  [ring/ring-json "0.5.1"]
                  [ring/ring-jetty-adapter "1.12.2"]
+                 [ring/ring-defaults "0.5.0"]
                  [ring-session-memcached "0.0.1"]
                  [cheshire "5.10.0"]
                  [compojure "1.7.0"]
                  [buddy/buddy-sign "3.5.351"]
                  [buddy/buddy-core "1.12.0-430"]
                  [buddy/buddy-hashers "2.0.167"]
-                 [buddy/buddy-auth "3.0.1"]])
+                 [buddy/buddy-auth "3.0.1"]
+                 [metosin/malli "0.16.3"]
+                 [com.stuartsierra/component "1.1.0"]]
+  :source-paths ["src" "dev"])

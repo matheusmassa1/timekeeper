@@ -19,3 +19,4 @@ pom.xml.asc
 .vscode/
 .env
 set_timekeeper_vars.sh
+mongodata/
