@@ -18,4 +18,7 @@
                  [buddy/buddy-sign "3.5.351"]
                  [buddy/buddy-core "1.12.0-430"]
                  [buddy/buddy-hashers "2.0.167"]
-                 [buddy/buddy-auth "3.0.1"]])
+                 [buddy/buddy-auth "3.0.1"]
+                 [metosin/malli "0.16.3"]
+                 [com.stuartsierra/component "1.1.0"]]
+  :source-paths ["src" "dev"])
