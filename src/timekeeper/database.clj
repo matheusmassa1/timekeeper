@@ -1,75 +1,44 @@
 (ns timekeeper.database
   (:require [timekeeper.config :as config]
-            [timekeeper.utils :as utils]
             [buddy.hashers :refer [encrypt]]
             [monger.core :as mg]
             [monger.collection :as mc])
   (:import org.bson.types.ObjectId))
 
-(defn create-mongo-uri
-  [{:keys [dbname host user password port]}]
-  (format "mongodb://%s:%s@%s:%s/%s"
-          user
-          password
-          (or host "127.0.0.1")
-          port
-          dbname))
+;; (defn create-mon;; go-uri
+  ;; [{:keys [dbname host user password port]}]
+  ;; (format "mongodb://%s:%s@%s:%s/%s"
+  ;;         user
+  ;;         password
+  ;;         (or host "127.0.0.1")
+  ;;         port
+  ;;         dbname))
 
-(defn connect-to-mongo []
-  (let [uri (create-mongo-uri (config/db-config))
-        {:keys [conn db]} (mg/connect-via-uri uri)]
-  {:conn conn :db db}))
+(defn insert-one [db coll doc]
+  (let [oid (ObjectId.)
+        doc (merge doc {:_id oid})]
+    (-> (mc/insert-and-return db coll doc)
+        (update :_id str))))
 
-(defn insert-document [document coll]
-  (let [{:keys [db]} (connect-to-mongo)
-        oid (ObjectId.)
-        doc (merge document {:_id oid})]
-    (mc/insert-and-return db coll doc)))
+;; (defn find-one [db coll query]
+;;   (let [r (mc/find-one-as-map db coll query)]
+;;     (when-not (nil? r)
+;;       (update r :_id str))))
 
-(defn create-user [document]
-  (let [{:keys [username email password]} document
-        hashed-password (encrypt password)
-        created-user (insert-document {:username username
-                                       :email email
-                                       :password hashed-password}
-                                      "users")
-        sanitized (dissoc created-user :password)]
-    sanitized))
-;; (defn db-query [sql]
-;;   (jdbc/execute! db sql
-;;                  {:return-keys true
-;;                   :builder-fn rs/as-unqualified-maps}))
+(defn find-one [db coll query]
+  (when-let [r (mc/find-one-as-map db coll query)]
+    (update r :_id str)))
 
-;; (defn db-query-one [sql]
-;;   (jdbc/execute-one! db sql
-;;                  {:return-keys true
-;;                   :builder-fn rs/as-unqualified-maps}))
+(defn get-user-by-username [db username]
+  (find-one db "users" {:username username}))
 
-;; (defn create-user
-;;   [{:keys [email username password]}]
-;;   (let [hashed-password (encrypt password)
-;;         created-user (->
-;;                        (hh/insert-into :users)
-;;                        (hh/columns :email :username :password)
-;;                        (hh/values [[email username hashed-password]])
-;;                        sql/format
-;;                        db-query-one
-;;                       (utils/reset-metadata))
-;;         sanitized-user (dissoc created-user :password)]
-;;     sanitized-user))
-
-;; (defn get-user [{:keys [username password]}]
-;;    (let [user (-> (hh/select :*)
-;;                   (hh/from :users)
-;;                   (hh/where := :username username)
-;;                   sql/format
-;;                   db-query-one
-;;                   (utils/reset-metadata))
-;;          sanitized-user (dissoc user :password)]
-;;     (if (and user (check password (:password user)))
-;;       sanitized-user
-;;       nil)))
-
+(defn create-user [db {:keys [username email password] :as document}]
+  (when-not (get-user-by-username db username)
+    (let [user-data {:username username
+                     :email email
+                     :password (encrypt password)}
+          created-user (insert-one db "users" user-data)]
+      (dissoc created-user :password))))
 
 ;; (defn save-oauth-credentials
 ;;   [{:keys [user-id access-token expires-in scope expires-at]}]
@@ -90,6 +59,3 @@
 ;;               (db-query-one))]
 ;;     data))
 
-
-(comment 
-  ,,,)
