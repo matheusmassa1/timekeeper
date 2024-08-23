@@ -24,6 +24,15 @@
 (defn jwt-secret []
   (get-config :jwt-secret))
 
+(defn create-mongo-uri []
+  (let [{:keys [dbname host user password port]} (db-config)]
+    (format "mongodb://%s:%s@%s:%s/%s"
+            user
+            password
+            (or host "127.0.0.1")
+            port
+            dbname)))
+
 (comment
-  (db-config)
-  ,,,)
+ (create-mongo-uri)
+  )
