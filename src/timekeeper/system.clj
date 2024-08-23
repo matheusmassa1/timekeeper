@@ -5,8 +5,9 @@
 
 
 (defn system []
-  (component/system-map
-   :db (new-database  "mongodb://user:12345@localhost:27017/timekeeper")
-   :http-server (component/using
-                 (new-http-server 3001 app)
-                 [:db])))
+  (let [db (new-database "mongodb://user:12345@localhost:27017/timekeeper")
+        context {:db db}
+        http-server (new-http-server 3001 (app context))]
+    (component/system-map
+     :db db
+     :http-server (component/using http-server [:db]))))
