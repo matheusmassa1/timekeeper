@@ -9,10 +9,8 @@
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
             [timekeeper.middleware :refer [wrap-db]]))
 
-(defn app [components]
-  (-> (app-routes components)
-      ;; (wrap-defaults api-defaults)
-      ;; (wrap-db)
+(defn app [context]
+  (-> (app-routes context)
       (wrap-access-rules {:rules access-rules :on-error on-error})
       (wrap-jwt-authorization)
       (wrap-jwt-authentication)

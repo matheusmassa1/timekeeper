@@ -10,7 +10,7 @@
                    {:pattern #"/healthCheck" :handler any-access}
                    {:pattern #"/requestInfo" :handler any-access}])
 
-(defn app-routes [components]
+(defn app-routes [context]
   (routes
     (GET "/healthCheck" [] handlers/ping)
     (POST "/login" req (handlers/login req))

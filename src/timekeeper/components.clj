@@ -25,12 +25,12 @@
 (defn new-database [uri]
   (map->Database {:uri uri}))
 
-(defrecord HTTPServer [port app server]
+(defrecord HTTPServer [port app context server]
   component/Lifecycle
 
   (start [this]
     (println ";; Starting web server")
-    (let [server-instance (jetty/run-jetty app {:port port :join? false})]
+    (let [server-instance (jetty/run-jetty (app context) {:port port :join? false})]
       (assoc this :server server-instance)))
 
   (stop [this]
