@@ -1,6 +1,5 @@
 (ns timekeeper.handlers
   (:require [ring.util.response :as resp]
-            [buddy.auth :refer [authenticated?]]
             [happy.oauth2 :as oauth]
             [timekeeper.config :as config]
             [timekeeper.database :as db]
@@ -10,7 +9,7 @@
             [timekeeper.auth :refer [is-valid-user create-token secret]]
             [monger.collection :as mc]
             [malli.core :as m]
-            [timekeeper.models.user :refer [validate-user-registration validate-user-login]]))
+            [timekeeper.domain.user :refer [register-user]]))
 
 (defn ping [_]
   (resp/response {:status 200
@@ -27,13 +26,25 @@
         (ok {:token token}))
       (bad-request {:error "Invalid credentials"}))))
 
-(defn register [req]
-  (let [{:keys [db body]} req]
-    (if (validate-user-registration body)
-      (if-let [user (db/create-user db body)]
-        (created user)
-        (bad-request {:error "User already exists"}))
-      (bad-request {:error "Invalid data"}))))
+(defn register-user-handler [req context]
+  (let [db (get-in context [:db :db])
+        data (:body req)
+        find-fn (partial db/find-user db)
+        register-fn (partial db/register-user-adapter db)
+        user (register-user find-fn register-fn data)]
+    (if user
+      (created user)
+      (bad-request {:error "User already exists"}))))
+
+;; (defn register [req]
+;;   (let [{:keys [db body]} req]
+;;     (if (validate-user-registration body)
+;;       (if-let [user (db/create-user db body)]
+;;         (created user)
+;;         (bad-request {:error "User already exists"}))
+;;       (bad-request {:error "Invalid data"}))))
+
+
 
 (comment ,,,)
 
