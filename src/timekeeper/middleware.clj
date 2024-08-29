@@ -1,10 +1,9 @@
-(ns timekeeper.middleware)
+(ns timekeeper.middleware
+  (:require [timekeeper.adapters.auth :refer [auth-backend]]
+            [buddy.auth.middleware :refer [wrap-authorization wrap-authentication]]))
 
-;; (defn wrap-db [handler db]
-;;   (fn [req]
-;;     (handler (assoc req :db db))))
+(defn wrap-jwt-authentication [handler]
+  (wrap-authentication handler auth-backend))
 
-(defn wrap-db [handler]
-  (fn [req components]
-    (let [db (:db components)]
-      (handler (req db)))))
+(defn wrap-jwt-authorization [handler]
+  (wrap-authorization handler auth-backend))

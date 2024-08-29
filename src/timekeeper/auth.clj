@@ -6,7 +6,7 @@
    [buddy.auth.accessrules :refer [error]]
    [buddy.auth :refer [authenticated?]]
    [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
-   [timekeeper.database :as db]
+   [timekeeper.adapters.database :as db]
    [malli.core :as m]
    [java-time.api :as jt]))
 
@@ -32,12 +32,6 @@
         claims {:user username :exp exp :role role}
         token (jwt/sign claims secret)]
     token))
-
-(defn wrap-jwt-authentication [handler]
-  (wrap-authentication handler auth-backend))
-
-(defn wrap-jwt-authorization [handler]
-  (wrap-authorization handler auth-backend))
 
 (defn auth-access [request]
   (if-not (authenticated? request)

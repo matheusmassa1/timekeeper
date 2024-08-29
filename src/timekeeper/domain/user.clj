@@ -1,6 +1,6 @@
 (ns timekeeper.domain.user
-  (:require [malli.core :as m])
-  (:import org.bson.types.ObjectId))
+  (:require [malli.core :as m]
+            [java-time.api :as jt]))
 
 ;; Models
 (def UserSchema
@@ -29,16 +29,21 @@
       username (conj {:username username})
       email    (conj {:email email}))))
 
-(defn user-exists? [find-fn data]
-  (let [user-info (extract-user-info data)
-        found-user (find-fn user-info)]
-    (when-not (empty? found-user)
-      true)))
+(defn extract-login-info [data]
+  (let [{:keys [username password]} data]
+    (cond-> []
+      username (conj {:username username})
+      password (conj {:password password}))))
 
-(defn register-user [find-fn register-fn data]
-  (if (validate-user-registration data)
-    (let [exists? (user-exists? find-fn data)]
-      (when-not exists?
-        (let [user (merge data {:_id (ObjectId.)})]
-          (register-fn user))))
-    nil))
+(defn is-valid-user? [input auth-data]
+  (let [{:keys [username password]} input]
+    (some-> auth-data
+           (:username)
+           (= username)
+           (and (= (:password auth-data) password)))))
+
+(defn generate-token-payload [auth-data]
+  (let [{:keys [username role]} auth-data
+        exp (jt/plus (jt/instant) (jt/minutes 120))
+        claims {:user username :exp exp :role role}]
+    claims))

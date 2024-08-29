@@ -1,4 +1,5 @@
-(ns timekeeper.utils)
+(ns timekeeper.utils
+  (:require [java-time.api :as jt]))
 
 (defn transform-map-keys [kw transform-fn]
   (-> kw
@@ -22,8 +23,8 @@
 (defn map-keys-to-underscore [m]
   (convert-keys m hyphen-to-underscore))
 
-(defn reset-metadata [data]
-  (with-meta data nil))
+(defn timestamp->string [ts]
+  (jt/format "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" (jt/zoned-date-time ts (jt/zone-id "UTC"))))
 
 (defn ok [d] {:status 200 :body d})
 

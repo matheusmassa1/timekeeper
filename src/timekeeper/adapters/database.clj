@@ -1,4 +1,4 @@
-(ns timekeeper.database
+(ns timekeeper.adapters.database
   (:require [timekeeper.config :as config]
             [buddy.hashers :refer [encrypt]]
             [monger.core :as mg]

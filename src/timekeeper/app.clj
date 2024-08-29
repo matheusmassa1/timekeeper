@@ -7,7 +7,7 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.json :refer [wrap-json-body wrap-json-response]]
             [ring.middleware.defaults :refer [wrap-defaults api-defaults]]
-            [timekeeper.middleware :refer [wrap-db]]))
+            [timekeeper.middleware :refer [wrap-jwt-authentication wrap-jwt-authorization]]))
 
 (defn app [context]
   (-> (app-routes context)

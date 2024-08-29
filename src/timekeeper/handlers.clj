@@ -1,15 +1,15 @@
 (ns timekeeper.handlers
   (:require [ring.util.response :as resp]
+            [timekeeper.adapters.database :as db]
             [happy.oauth2 :as oauth]
             [timekeeper.config :as config]
-            [timekeeper.database :as db]
             [happygapi.calendar.calendarList :as calendar]
             [happygapi.calendar.events :as event]
-            [timekeeper.utils :refer [ok bad-request created]]
+            [timekeeper.utils :refer [ok bad-request created timestamp->string]]
             [timekeeper.auth :refer [is-valid-user create-token secret]]
             [monger.collection :as mc]
             [malli.core :as m]
-            [timekeeper.domain.user :refer [register-user]]))
+            [timekeeper.ports.user :refer [register-user]]))
 
 (defn ping [_]
   (resp/response {:status 200
@@ -33,7 +33,8 @@
         register-fn (partial db/register-user-adapter db)
         user (register-user find-fn register-fn data)]
     (if user
-      (created user)
+      (let [sanitized-user (dissoc user :created-at :password)]
+        (created sanitized-user))
       (bad-request {:error "User already exists"}))))
 
 ;; (defn register [req]
