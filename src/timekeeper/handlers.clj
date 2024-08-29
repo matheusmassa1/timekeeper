@@ -9,7 +9,9 @@
             [timekeeper.auth :refer [is-valid-user create-token secret]]
             [monger.collection :as mc]
             [malli.core :as m]
-            [timekeeper.ports.user :refer [register-user]]))
+            [timekeeper.ports.user :refer [register-user]]
+            [timekeeper.ports.auth :as p]
+            [buddy.auth.backends.token :as token]))
 
 (defn ping [_]
   (resp/response {:status 200
@@ -24,6 +26,15 @@
     (if valid?
       (let [token (create-token data secret)]
         (ok {:token token}))
+      (bad-request {:error "Invalid credentials"}))))
+
+(defn new-login [req context]
+  (let [db (get-in context [:db :db])
+        data (:body req)
+        find-fn (partial db/find-user db)
+        token (p/login find-fn data)]
+    (if token
+      (ok {:token token})
       (bad-request {:error "Invalid credentials"}))))
 
 (defn register-user-handler [req context]
