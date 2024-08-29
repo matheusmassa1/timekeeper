@@ -2,9 +2,13 @@
   (:require [timekeeper.config :as config]
             [buddy.hashers :refer [encrypt]]
             [monger.core :as mg]
+            monger.joda-time
             [monger.collection :as mc]
             [monger.operators :refer [$or]])
-  (:import org.bson.types.ObjectId))
+  (:import org.bson.types.ObjectId
+           [org.joda.time DateTimeZone]))
+
+(DateTimeZone/setDefault DateTimeZone/UTC)
 
 (defn insert-one [db coll doc]
   (-> (mc/insert-and-return db coll doc)

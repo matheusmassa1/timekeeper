@@ -2,7 +2,9 @@
   (:require [timekeeper.domain.user :refer [extract-user-info validate-user-registration]]
             [java-time.api :as jt]
             [buddy.hashers :refer [derive]])
-  (:import [org.bson.types ObjectId]))
+  (:import [org.bson.types ObjectId]
+           [org.joda.time DateTime]
+           [org.joda.time DateTimeZone]))
 
 (defn user-exists? [find-fn data]
   (let [user-info (extract-user-info data)
@@ -15,7 +17,7 @@
   (if (validate-user-registration data)
     (let [exists? (user-exists? find-fn data)]
       (when-not exists?
-        (let [created-at (jt/instant)
+        (let [created-at (DateTime.)
               hashed-password (derive (:password data))
               user (-> data
                          (dissoc :password)

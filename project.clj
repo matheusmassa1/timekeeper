@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [aero "1.1.6"]
                  [com.novemberain/monger "3.6.0"]
-                 [clojure.java-time "1.4.2"]
+                 [joda-time/joda-time "2.12.7"]
                  [happygapi "0.4.10"]
                  [ring/ring-core "1.12.2"]
                  [ring/ring-devel "1.12.2"]

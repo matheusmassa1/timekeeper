@@ -33,7 +33,7 @@
         register-fn (partial db/register-user-adapter db)
         user (register-user find-fn register-fn data)]
     (if user
-      (let [sanitized-user (dissoc user :created-at :password)]
+      (let [sanitized-user (dissoc user :password)]
         (created sanitized-user))
       (bad-request {:error "User already exists"}))))
 
