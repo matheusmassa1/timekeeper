@@ -1,6 +1,7 @@
 (ns timekeeper.domain.user
-  (:require [malli.core :as m]
-            [java-time.api :as jt]))
+  (:require [malli.core :as m])
+  (:import [org.joda.time DateTime]
+           [org.joda.time Minutes]))
 
 ;; Models
 (def UserSchema
@@ -42,8 +43,12 @@
            (= username)
            (and (= (:password auth-data) password)))))
 
+(defn addMinutes [now]
+  (-> now
+      (.plusMinutes 120)))
+
 (defn generate-token-payload [auth-data]
   (let [{:keys [username role]} auth-data
-        exp (jt/plus (jt/instant) (jt/minutes 120))
+        exp (addMinutes (DateTime.))
         claims {:user username :exp exp :role role}]
     claims))

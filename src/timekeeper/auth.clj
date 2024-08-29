@@ -7,8 +7,9 @@
    [buddy.auth :refer [authenticated?]]
    [buddy.auth.middleware :refer [wrap-authentication wrap-authorization]]
    [timekeeper.adapters.database :as db]
-   [malli.core :as m]
-   [java-time.api :as jt]))
+   [malli.core :as m])
+  (:import [org.joda.time DateTime]
+           [org.joda.time Minutes]))
 
 
 (defonce secret "mysecret")
@@ -26,9 +27,14 @@
          (= username)
          (and (= (:password auth-data) password))))
 
+(defn addMinutesToNow []
+  (let [now (DateTime/now)]
+    (-> now
+        (.plusMinutes 120))))
+
 (defn create-token [payload secret]
   (let [{:keys [username role]} payload
-        exp (jt/plus (jt/instant) (jt/minutes 120))
+        exp (addMinutesToNow)
         claims {:user username :exp exp :role role}
         token (jwt/sign claims secret)]
     token))
