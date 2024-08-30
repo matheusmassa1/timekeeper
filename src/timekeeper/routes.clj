@@ -15,5 +15,6 @@
     (GET "/healthCheck" [] handlers/ping)
     (POST "/login" req (handlers/login req))
     (POST "/register" req (handlers/register-user-handler req context))
+    (POST "/newRegister" req (handlers/new-register-user-handler req context))
     (GET "/requestInfo" [] handle-dump)
     (route/not-found (resp/response {:error "Route not found"}))))

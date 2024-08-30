@@ -1,6 +1,5 @@
 (ns timekeeper.ports.user
   (:require [timekeeper.domain.user :refer [extract-user-info validate-user-registration]]
-            [java-time.api :as jt]
             [buddy.hashers :refer [derive]])
   (:import [org.bson.types ObjectId]
            [org.joda.time DateTime]
@@ -12,7 +11,6 @@
     (when-not (empty? found-user)
       true)))
 
-;; TODO: Hash passwords before insert
 (defn register-user [find-fn register-fn data]
   (if (validate-user-registration data)
     (let [exists? (user-exists? find-fn data)]
@@ -26,3 +24,8 @@
                                 :created-at created-at))]
           (register-fn user))))
     nil))
+
+(defn register-user! [dispatcher data]
+  (let [find-user (:db/find-one dispatcher)
+        register-user (:db/insert dispatcher)]
+    (register-user (find-user "user" data) (register-user "users" data))))

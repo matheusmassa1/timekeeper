@@ -1,16 +1,16 @@
 (ns timekeeper.handlers
   (:require [ring.util.response :as resp]
             [timekeeper.adapters.database :as db]
+            [timekeeper.auth :refer [is-valid-user create-token secret]]
+            [timekeeper.ports.user :refer [register-user register-user!]]
+            [timekeeper.ports.auth :as p]
+            [timekeeper.utils :refer [ok created bad-request]]
             [happy.oauth2 :as oauth]
             [timekeeper.config :as config]
             [happygapi.calendar.calendarList :as calendar]
             [happygapi.calendar.events :as event]
-            [timekeeper.utils :refer [ok bad-request created timestamp->string]]
-            [timekeeper.auth :refer [is-valid-user create-token secret]]
             [monger.collection :as mc]
             [malli.core :as m]
-            [timekeeper.ports.user :refer [register-user]]
-            [timekeeper.ports.auth :as p]
             [buddy.auth.backends.token :as token]))
 
 (defn ping [_]
@@ -47,6 +47,15 @@
       (let [sanitized-user (dissoc user :password)]
         (created sanitized-user))
       (bad-request {:error "User already exists"}))))
+
+;; TODO: implement the new registration
+(defn new-register-user-handler [req context]
+  (let [dispatcher (get-in context [:dispatcher :dispatcher])
+        insert-fn (partial (:db/insert dispatcher) "users")]
+    (println dispatcher)
+    (insert-fn {:username "test" :password "test"})
+    (ok {:status 200
+         :body "OK"})))
 
 ;; (defn register [req]
 ;;   (let [{:keys [db body]} req]
