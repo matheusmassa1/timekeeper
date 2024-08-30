@@ -1,6 +1,7 @@
 (ns timekeeper.config
   (:require [aero.core :as aero]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [timekeeper.adapters.database :as db]))
 
 (defn load-config []
   (aero/read-config (io/resource "config.edn")))
@@ -10,10 +11,6 @@
 
 (defn db-config []
   (get-config :db))
-
-(defn memcached-config []
-  (let [config (get-config :memcached)]
-    (str (config :host) ":" (config :port))))
 
 (defn oauth-config []
   (get-config :oauth))
@@ -33,6 +30,18 @@
             port
             dbname)))
 
+;; action dispatchers
+;; (def prod-actions
+;;   {:db/insert (fn [coll doc] (mg/insert coll doc))
+;;    :db/find (fn [coll query] (mg/find coll query))
+;;    :db/update (fn [coll query update] (mg/update coll query update))
+;;    :db/remove (fn [coll query] (mg/remove coll query))})
+
+(defn db-prod-actions [conn]
+  {:db/insert (fn [coll doc] (db/insert-one conn coll doc))
+   :db/find-one (fn [coll query] (db/find-one conn coll query))})
+
 (comment
  (create-mongo-uri)
+ (db-prod-actions {:connection {:obj "mock"}})
   )
