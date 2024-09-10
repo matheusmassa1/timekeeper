@@ -30,16 +30,9 @@
             port
             dbname)))
 
-;; action dispatchers
-;; (def prod-actions
-;;   {:db/insert (fn [coll doc] (mg/insert coll doc))
-;;    :db/find (fn [coll query] (mg/find coll query))
-;;    :db/update (fn [coll query update] (mg/update coll query update))
-;;    :db/remove (fn [coll query] (mg/remove coll query))})
-
 (defn db-prod-actions [conn]
-  {:db/insert (fn [coll doc] (db/insert-one conn coll doc))
-   :db/find-one (fn [coll query] (db/find-one conn coll query))})
+  {:db/insert (fn insert [coll doc] (db/insert-one conn coll doc))
+   :db/find-one (fn find-one [coll query] (db/find-one conn coll query))})
 
 (comment
  (create-mongo-uri)

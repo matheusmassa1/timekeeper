@@ -19,8 +19,6 @@
 (def auth-backend
   (jws-backend {:secret secret :token-name "Bearer"}))
 
-;; {:username "admin", :password "admin", :roles ["admin" "student"]}
-
 (defn is-valid-user [username password]
   (some-> auth-data
          (:username)

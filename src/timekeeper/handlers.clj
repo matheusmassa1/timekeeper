@@ -28,15 +28,6 @@
         (ok {:token token}))
       (bad-request {:error "Invalid credentials"}))))
 
-(defn new-login [req context]
-  (let [db (get-in context [:db :db])
-        data (:body req)
-        find-fn (partial db/find-user db)
-        token (p/login find-fn data)]
-    (if token
-      (ok {:token token})
-      (bad-request {:error "Invalid credentials"}))))
-
 (defn register-user-handler [req context]
   (let [db (get-in context [:db :db])
         data (:body req)

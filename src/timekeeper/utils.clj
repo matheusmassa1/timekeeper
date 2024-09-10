@@ -1,5 +1,6 @@
 (ns timekeeper.utils
-  (:require [java-time.api :as jt]))
+  (:require [malli.core :as m]
+            [malli.error :as me]))
 
 (defn transform-map-keys [kw transform-fn]
   (-> kw
@@ -23,8 +24,10 @@
 (defn map-keys-to-underscore [m]
   (convert-keys m hyphen-to-underscore))
 
-(defn timestamp->string [ts]
-  (jt/format "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'" (jt/zoned-date-time ts (jt/zone-id "UTC"))))
+(defn keyword->table-name [kw]
+  (if (namespace kw)
+    (str (namespace kw) "_" (name kw))
+    (name kw)))
 
 (defn ok [d] {:status 200 :body d})
 
@@ -33,3 +36,12 @@
 (defn bad-request [d] {:status 400 :body d})
 
 (defn unauthorized [d] {:status 401 :body d})
+
+(defn validate-schema [schema data]
+  (if (m/validate schema data)
+    {:valid? true}
+    (let [errors (me/humanize (m/explain schema data))]
+      {:valid? false :error errors})))
+
+(defn sanitize [data]
+  (apply dissoc data [:password]))

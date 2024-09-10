@@ -1,8 +1,6 @@
 (ns timekeeper.adapters.database
-  (:require [timekeeper.config :as config]
-            [buddy.hashers :refer [encrypt]]
+  (:require monger.joda-time
             [monger.core :as mg]
-            monger.joda-time
             [monger.collection :as mc]
             [monger.operators :refer [$or]])
   (:import org.bson.types.ObjectId
