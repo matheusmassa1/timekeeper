@@ -25,6 +25,7 @@
           (register-fn user))))
     nil))
 
+
 (defn register-user! [dispatcher data]
   (let [find-user (:db/find-one dispatcher)
         register-user (:db/insert dispatcher)]
