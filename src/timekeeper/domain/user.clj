@@ -1,29 +1,39 @@
 (ns timekeeper.domain.user
-  (:require [malli.core :as m])
+  (:require [malli.core :as m]
+            [malli.util :as mu]
+            [timekeeper.utils :refer [validate-schema]]
+            [buddy.hashers :refer [derive]])
   (:import [org.joda.time DateTime]
-           [org.joda.time Minutes]))
+           [org.joda.time Minutes]
+           [org.bson.types ObjectId]))
 
 ;; Models
 (def UserSchema
   [:map
+   {:closed true}
    [:email string?]
    [:username string?]
    [:password string?]])
 
 (def UserLoginSchema
-  [:map
-   [:username string?]
-   [:password string?]])
+  (mu/dissoc UserSchema :email))
 
 (defn validate-user-registration [data]
   (when (m/validate UserSchema data)
     data))
 
+(defn validate-registration-schema [input]
+  (validate-schema UserSchema input))
+
 (defn validate-user-login [data]
   (when (m/validate UserLoginSchema data)
     data))
 
+(defn validate-login-schema [input]
+  (validate-schema UserLoginSchema input))
+
 ;; Services
+;; TODO: move this to a logic ns
 (defn extract-user-info [data]
   (let [{:keys [username email]} data]
     (cond-> []
@@ -42,13 +52,3 @@
            (:username)
            (= username)
            (and (= (:password auth-data) password)))))
-
-(defn addMinutes [now]
-  (-> now
-      (.plusMinutes 120)))
-
-(defn generate-token-payload [auth-data]
-  (let [{:keys [username role]} auth-data
-        exp (addMinutes (DateTime.))
-        claims {:user username :exp exp :role role}]
-    claims))
